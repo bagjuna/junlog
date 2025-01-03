@@ -43,6 +43,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,27 +52,14 @@ import java.util.Map;
 @RestController
 public class PostController {
 
-
     @GetMapping("/posts")
     public String get() {
         return "Hello World";
     }
 
     @PostMapping("/posts")
-    public Map<String, String> post(@RequestBody @Valid PostCreate params, BindingResult result) throws Exception {
-
-        log.info("params={}", params);
-        if (result.hasErrors()) {
-            List<FieldError> fieldErrors = result.getFieldErrors();
-            FieldError firstFieldError = fieldErrors.get(0);
-            String invalidField = firstFieldError.getField();
-            String errorMessage = firstFieldError.getDefaultMessage();
-
-            Map<String, String> error = new HashMap<>();
-            error.put(invalidField, errorMessage);
-            return error;
-
-        }
+    public Map<String, String> post(@RequestBody @Valid PostCreate params) throws Exception {
+        log.info("parmas {}", params);
         return Map.of();
     }
 
