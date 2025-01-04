@@ -58,10 +58,14 @@ class PostControllerTest {
     @Test
     @DisplayName("/posts 요청시 title값은 필수다.")
     void test2() throws Exception {
+        PostCreate request = PostCreate.builder()
+                .content("내용입니다.").build();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(request);
         // expected
         mockMvc.perform(post("/posts")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": null, \"content\": null} ")
+                        .content(json)
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
@@ -75,10 +79,16 @@ class PostControllerTest {
     @Test
     @DisplayName("/posts 요청시 DB에 값이 저장된다.")
     void test3() throws Exception {
+
+        PostCreate request = PostCreate.builder()
+                .title("제목입니다.")
+                .content("내용입니다.").build();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(request);
         // expected
         mockMvc.perform(post("/posts")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": \"제목입니다.\", \"content\": \"내용입니다.\"} ")
+                        .content(json)
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -88,7 +98,6 @@ class PostControllerTest {
         Post post = postRepository.findAll().get(0);
         assertEquals("제목입니다.", post.getTitle());
         assertEquals("내용입니다.", post.getContent());
-
 
     }
 
