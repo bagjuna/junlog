@@ -37,19 +37,12 @@ package com.junlog.controller;
 
 
 import com.junlog.request.PostCreate;
-import com.junlog.respository.PostRepository;
 import com.junlog.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -64,9 +57,10 @@ public class PostController {
     }
 
     @PostMapping("/posts")
-    public Map<String, String> post(@RequestBody @Valid PostCreate request) throws Exception {
+    public void post(@RequestBody @Valid PostCreate request)  {
+        // Case 1 저장한 데이터
+        // Case 2
         postService.write(request);
-        return Map.of();
     }
 
 
