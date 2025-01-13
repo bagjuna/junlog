@@ -35,13 +35,32 @@ package com.junlog.controller;
 // 3. 여러 개의 예외처리 힘듦
 // 4. 세 번이상의 반복적인 작업은 피해야한다.
 
+// 데이터 응답 방법
+// Case 1 저장한 데이터
+// Case 2 저장한 데이터 primary_id로 응답하기
+//      Client에서는 수신한 id를 글 조회 API를 통해서 데이터를 수신받음
+// Case 3 응답 필요 없음 -> 클라이언트에서 모든 POST(글) 데이터 context를 잘 관리함
+// Bad Case: 서버에서 -> 반드시 이렇게 할껍니다! fix
+//                  -> 서버에서 차라리 유연하게 대응하는게 좋습니다. -> 코드를 잘 짜야겠죠?!
+//                  -> 한 번에 일관적으로 잘 처리되는 케이스가 없습니다. -> 잘 관리하는 형태가 중요합니다.
 
+
+import com.junlog.domain.Post;
+import com.junlog.exception.InvalidRequest;
 import com.junlog.request.PostCreate;
+import com.junlog.request.PostEdit;
+import com.junlog.request.PostSearch;
+import com.junlog.response.PostResponse;
 import com.junlog.service.PostService;
+import jakarta.persistence.PostUpdate;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Slf4j
@@ -51,19 +70,38 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/posts")
-    public String get() {
-        return "Hello World";
-    }
 
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid PostCreate request)  {
-        // Case 1 저장한 데이터
-        // Case 2
+    public void post(@RequestBody @Valid PostCreate request) {
+        request.validate();
         postService.write(request);
+
+    }
+
+    /**
+     * 조회 Api
+     * 지난 시간 = 단건 조회 API (1개의 글 Post)
+     */
+    @GetMapping("/posts/{postId}")
+    public PostResponse get(@PathVariable Long postId) {
+        return postService.get(postId);
+    }
+
+    @GetMapping("/posts")
+    public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
+        return postService.getList(postSearch);
+    }
+
+    @PatchMapping("/posts/{postId}")
+    public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request) {
+        postService.edit(postId, request);
     }
 
 
+    @DeleteMapping("/posts/{postId}")
+    public void delete(@PathVariable Long postId) {
+        postService.delete(postId);
+    }
 
 
 }

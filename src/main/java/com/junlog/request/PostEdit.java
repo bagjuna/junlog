@@ -1,6 +1,5 @@
 package com.junlog.request;
 
-import com.junlog.exception.InvalidRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class PostCreate {
+public class PostEdit {
 
     @NotBlank(message = "타이틀을 입력하세요.")
     private String title;
@@ -20,21 +19,11 @@ public class PostCreate {
 
 
     @Builder
-    public PostCreate(String title, String content) {
+    public PostEdit(String title, String content) {
         this.title = title;
         this.content = content;
     }
 
-    public void validate() {
-        if (title.contains("바보")) {
-            throw new InvalidRequest();
-        }
-
-    }
-
-    // 빌더의 장점
-    // - 가독성에 좋다. (값 새성에 대한 유연함)
-    // - 필요한 값만 받을 수 있다.
 
 
 }

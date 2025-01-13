@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class JunlogApplication {
 
     public static void main(String[] args) {
-        log.info("dfdaf");
         SpringApplication.run(JunlogApplication.class, args);
     }
 
