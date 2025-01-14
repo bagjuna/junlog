@@ -1,5 +1,6 @@
 package com.junlog.controller;
 
+import com.junlog.exception.InvalidRequest;
 import com.junlog.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,9 @@ public class ExceptionController {
         ErrorResponse body = ErrorResponse.builder()
                 .code(String.valueOf(statusCode))
                 .message(e.getMessage())
+                .validation(e.getValidation())
                 .build();
+
 
         ResponseEntity<ErrorResponse> response = ResponseEntity.status(statusCode)
                 .body(body);
