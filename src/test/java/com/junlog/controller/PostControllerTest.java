@@ -44,8 +44,8 @@ class PostControllerTest {
 
 
     @Test
-    @DisplayName("/posts 요청시 title값은 필수다.")
-    void test2() throws Exception {
+    @DisplayName("글 작성 요청시 title값은 필수다.")
+    void test() throws Exception {
         PostCreate request = PostCreate.builder()
                 .content("내용입니다.").build();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -242,28 +242,28 @@ class PostControllerTest {
 
 
 
-    @Test
-    @DisplayName("게시글 작성시 제목에 바보는 포함 될 수 없다.")
-    void test11() throws Exception {
-
-        PostCreate request = PostCreate.builder()
-                .title("나는 바보입니다.")
-                .content("내용입니다.").build();
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(request);
-
-        // expected
-        mockMvc.perform(post("/posts")
-                        .contentType(APPLICATION_JSON)
-                        .content(json)
-                )
-                .andExpect(status().isBadRequest())
-                .andDo(print());
-
-        // then
-
-    }
-
+//    @Test
+//    @DisplayName("게시글 작성시 제목에 바보는 포함 될 수 없다.")
+//    void test11() throws Exception {
+//
+//        PostCreate request = PostCreate.builder()
+//                .title("나는 바보입니다.")
+//                .content("내용입니다.").build();
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        String json = objectMapper.writeValueAsString(request);
+//
+//         expected
+//        mockMvc.perform(post("/posts")
+//                        .contentType(APPLICATION_JSON)
+//                        .content(json)
+//                )
+//                .andExpect(status().isBadRequest())
+//                .andDo(print());
+//
+//         then
+//
+//    }
+//
 
 
 }

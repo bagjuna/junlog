@@ -11,6 +11,7 @@ public class JunlogApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(JunlogApplication.class, args);
+
     }
 
 

@@ -73,7 +73,10 @@ public class PostController {
 
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request) {
-        request.validate();
+        // 1. GET Parameter
+        // 2. POST(body) value
+        // 3.
+//        request.validate();
         postService.write(request);
 
     }

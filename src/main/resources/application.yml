@@ -1,4 +1,12 @@
 spring:
+  datasource:
+    url: jdbc:h2:mem:junlog
+#    url: jdbc:postgresql://localhost:5432/junlog
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+#    driver-class-name: org.postgresql.Driver
+
   h2:
     console:
       enabled: true
@@ -10,8 +18,3 @@ spring:
         one-indexed-parameters: true
         default-page-size: 5
 
-  datasource:
-    url: jdbc:h2:mem:junlog
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
