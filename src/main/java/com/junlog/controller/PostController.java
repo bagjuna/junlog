@@ -45,6 +45,7 @@ package com.junlog.controller;
 //                  -> 한 번에 일관적으로 잘 처리되는 케이스가 없습니다. -> 잘 관리하는 형태가 중요합니다.
 
 
+import com.junlog.config.data.UserSession;
 import com.junlog.domain.Post;
 import com.junlog.exception.InvalidRequest;
 import com.junlog.request.PostCreate;
@@ -53,6 +54,7 @@ import com.junlog.request.PostSearch;
 import com.junlog.response.PostResponse;
 import com.junlog.service.PostService;
 import jakarta.persistence.PostUpdate;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,14 +72,22 @@ public class PostController {
 
     private final PostService postService;
 
+    @GetMapping("/foo")
+    public String foo(UserSession userSession) {
+        log.info("name {}", userSession.name);
+        return userSession.name;
+    }
 
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid PostCreate request) {
+    public void post(@RequestBody @Valid PostCreate request, @RequestHeader String authorization) {
+
         // 1. GET Parameter
         // 2. POST(body) value
         // 3.
-//        request.validate();
-        postService.write(request);
+        // request.validate();
+        if (authorization.equals("juna")) {
+            postService.write(request);
+        }
 
     }
 
