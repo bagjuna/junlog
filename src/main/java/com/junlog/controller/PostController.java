@@ -73,22 +73,15 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/foo")
-    public String foo(UserSession userSession) {
-        log.info("name {}", userSession.name);
-        return userSession.name;
+    public Long foo(UserSession userSession) {
+        log.info("name {}", userSession.id);
+        return userSession.id;
     }
 
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid PostCreate request, @RequestHeader String authorization) {
+    public void post(@RequestBody @Valid PostCreate request, UserSession userSession) {
 
-        // 1. GET Parameter
-        // 2. POST(body) value
-        // 3.
-        // request.validate();
-        if (authorization.equals("juna")) {
-            postService.write(request);
-        }
-
+        postService.write(request);
     }
 
     /**

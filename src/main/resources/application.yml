@@ -1,11 +1,17 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:junlog
+    url: jdbc:h2:mem:junlog;NON_KEYWORDS=USER
 #    url: jdbc:postgresql://localhost:5432/junlog
     username: sa
     password:
     driver-class-name: org.h2.Driver
-#    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    defer-datasource-initialization: true
+  #    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: always
 
   h2:
     console:
@@ -15,6 +21,7 @@ spring:
   data:
     web:
       pageable:
+        max-page-size: 2000
+        default-page-size: 20
         one-indexed-parameters: true
-        default-page-size: 5
 
