@@ -5,6 +5,7 @@ import com.junlog.domain.Session;
 import com.junlog.domain.User;
 import com.junlog.request.Login;
 import com.junlog.request.PostCreate;
+import com.junlog.request.Signup;
 import com.junlog.respository.PostRepository;
 import com.junlog.respository.SessionRepository;
 import com.junlog.respository.UserRepository;
@@ -201,6 +202,33 @@ class AuthControllerTest {
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
                 .andDo(print());
+
+    }
+
+    @Test
+    @DisplayName("회원 가입")
+    void test6() throws Exception {
+
+        //given
+
+        Signup signup = Signup.builder()
+                .name("juna")
+                .email("juna1234@naver.com")
+                .password("1234")
+                .build();
+
+
+
+        //when
+
+        //then
+
+        mockMvc.perform(post("/auth/signup")
+                        .content(objectMapper.writeValueAsString(signup))
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+
 
     }
 

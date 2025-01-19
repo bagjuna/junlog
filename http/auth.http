@@ -11,6 +11,5 @@ Content-Type: application/json
 ### 인증 페이지 요청
 GET http://localhost:8080/foo
 Content-Type: application/json
-Cookie: SESSION=c04fce61-c0af-4d37-bac9-6d80731531e2
-
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzM3MjA0MzI1fQ.uGuVbfGC4vfgxNcXecpOKzgZkx6J2XjahnoMba7ST1s
 

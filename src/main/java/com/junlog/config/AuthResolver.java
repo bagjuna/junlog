@@ -4,6 +4,12 @@ import com.junlog.config.data.UserSession;
 import com.junlog.domain.Session;
 import com.junlog.exception.Unauthorized;
 import com.junlog.respository.SessionRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +20,16 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import javax.crypto.SecretKey;
+import java.util.Base64;
+
 @Slf4j
 @RequiredArgsConstructor
 public class AuthResolver implements HandlerMethodArgumentResolver {
 
     private final SessionRepository sessionRepository;
+
+    private final AppConfig appConfig;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -27,36 +38,31 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-        if (servletRequest == null) {
-            log.error("servletRequest null");
-            throw new Unauthorized();
-        }
-        Cookie[] cookies = servletRequest.getCookies();
 
-        if (cookies.length == 0) {
-            log.error("cookies null");
+        log.info(">>> {}", appConfig.toString());
+
+        String jws = webRequest.getHeader("Authorization");
+
+        if (jws == null || jws.equals("")) {
             throw new Unauthorized();
         }
 
-        String accessToken = null;
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("SESSION")) {
-                accessToken = cookie.getValue();
-            }
-        }
+        try {
 
-        if (accessToken == null || accessToken.equals("")) {
+
+            Jws<Claims> claims = Jwts.parser()
+                    .setSigningKey(appConfig.getJwtKey())
+                    .build()
+                    .parseSignedClaims(jws);
+
+            String userId = claims.getBody().getSubject();
+
+            return new UserSession(Long.parseLong(userId));
+
+        } catch (JwtException e) {
             throw new Unauthorized();
         }
 
-        // 데이터베이스 사용자 확인 작업
-        Session session = sessionRepository.findByAccessToken(accessToken)
-                .orElseThrow(() -> new Unauthorized());
-
-        // ...
-
-        return new UserSession(session.getUser().getId());
 
     }
 

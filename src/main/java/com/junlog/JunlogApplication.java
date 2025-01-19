@@ -1,11 +1,12 @@
 package com.junlog;
 
-import lombok.extern.slf4j.Slf4j;
+import com.junlog.config.AppConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 
-@Slf4j
+@EnableConfigurationProperties(AppConfig.class)
 @SpringBootApplication
 public class JunlogApplication {
 

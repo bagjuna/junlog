@@ -1,6 +1,9 @@
 package com.junlog.controller;
 
+import com.junlog.config.AppConfig;
 import com.junlog.request.Login;
+import com.junlog.request.Signup;
+import com.junlog.response.SessionResponse;
 import com.junlog.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Duration;
-import java.util.Optional;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+
+import javax.crypto.SecretKey;
+import java.security.Key;
+import java.util.Base64;
+import java.util.Date;
 
 @Slf4j
 @RestController
@@ -20,31 +28,35 @@ import java.util.Optional;
 public class AuthController {
 
     private final AuthService authService;
-
+    private final AppConfig appConfig;
 
     @PostMapping("/auth/login")
-    public ResponseEntity<Object> login(@RequestBody Login login) {
+    public SessionResponse login(@RequestBody Login login) {
         log.info(">>>login: {}", login);
+        Long userId = authService.signin(login);
 
-        // DB에서 조회
-        // 토큰을 응답
-        String accessToken = authService.signin(login);
-        ResponseCookie cookie = ResponseCookie.from("SESSION", accessToken)
-                .domain("localhost")  // TODO 서버 환경에 따른 분리 필요
-                .path("/")
-                .httpOnly(true)
-                .secure(false)
-                .maxAge(Duration.ofDays(30))
-                .sameSite("Strict")
-                .build();
+//        SecretKey key = getSecretKey();
+//        Base64.getEncoder().encode(key.getEncoded());
+        SecretKey key = Keys.hmacShaKeyFor(appConfig.getJwtKey());
 
-        log.info(">>>>>cookie = {} ", cookie);
+        String jws = Jwts.builder()
+                .subject(userId.toString())
+                .signWith(key)
+                .setIssuedAt(new Date())
+                .compact();
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .build();
+        return new SessionResponse(jws);
+    }
 
+    private static SecretKey getSecretKey() {
+        SecretKey key = Jwts.SIG.HS256.key().build(); //or HS384.key() or HS512.key()
+        return key;
     }
 
 
+    @PostMapping("/auth/signup")
+    public void signup(@RequestBody Signup signup) {
+        authService.signup(signup);
+
+    }
 }

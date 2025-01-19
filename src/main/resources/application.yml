@@ -9,9 +9,9 @@ spring:
   jpa:
     defer-datasource-initialization: true
   #    driver-class-name: org.postgresql.Driver
-  sql:
-    init:
-      mode: always
+#  sql:
+#    init:
+#      mode: always
 
   h2:
     console:
@@ -25,3 +25,5 @@ spring:
         default-page-size: 20
         one-indexed-parameters: true
 
+juna:
+  jwt-key: "m1B9hOwtI8AyZ8QTqkOQVcufEcXNGbFdjGNNFBEjQ6A="
