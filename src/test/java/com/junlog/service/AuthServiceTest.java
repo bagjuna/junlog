@@ -2,18 +2,19 @@ package com.junlog.service;
 
 import com.junlog.domain.User;
 import com.junlog.exception.AlreadyExistEmailException;
+import com.junlog.exception.InvalidSigninInformation;
 import com.junlog.request.Login;
 import com.junlog.request.Signup;
-import com.junlog.respository.PostRepository;
 import com.junlog.respository.UserRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-
+@ActiveProfiles("test")
 class AuthServiceTest {
 
 
@@ -32,6 +33,7 @@ class AuthServiceTest {
     @DisplayName("회원가입 성공")
     void test1() throws Exception{
         //given
+//        PasswordEncoder encoder = new PasswordEncoder();
         Signup signup = Signup.builder()
                 .name("juna")
                 .email("juna1234@naver.com")
@@ -44,7 +46,8 @@ class AuthServiceTest {
         assertEquals(1, userRepository.count());
         User user = userRepository.findAll().iterator().next();
         assertEquals(user.getEmail(), signup.getEmail());
-        assertEquals(user.getPassword(), signup.getPassword());
+//        assertNotEquals("1234", encoder.encrypt(user.getPassword()));
+        assertEquals("1234", user.getPassword());
         assertEquals(user.getName(), signup.getName());
     }
 
@@ -60,6 +63,8 @@ class AuthServiceTest {
                 .name("준아")
                 .build();
 
+        userRepository.save(user);
+
         Signup signup = Signup.builder()
                 .name("juna")
                 .email("juna1234@naver.com")
@@ -72,6 +77,56 @@ class AuthServiceTest {
     }
 
 
+    @Test
+    @DisplayName("로그인 성공")
+    void test3() throws Exception{
+        //given
+
+
+
+        Signup signup = Signup.builder()
+                .name("juna")
+                .email("juna1234@naver.com")
+                .password("1234")
+                .build();
+
+        authService.signup(signup);
+
+        Login login = Login.builder()
+                .email("juna1234@naver.com")
+                .password("1234")
+                .build();
+
+        //when
+        authService.signin(login);
+
+        //then
+        assertEquals(1, userRepository.count());
+
+    }
+
+
+    @Test
+    @DisplayName("로그인 비밀번호 틀림")
+    void test4() throws Exception{
+        //given
+        Signup signup = Signup.builder()
+                .name("juna")
+                .email("juna1234@naver.com")
+                .password("1234")
+                .build();
+
+        authService.signup(signup);
+
+        Login login = Login.builder()
+                .email("juna1234@naver.com")
+                .password("12345")
+                .build();
+
+        //when
+        assertThrows(InvalidSigninInformation.class, () -> authService.signin(login));
+
+    }
 
 
 }

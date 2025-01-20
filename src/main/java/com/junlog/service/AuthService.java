@@ -1,9 +1,9 @@
 package com.junlog.service;
 
-import com.junlog.domain.Session;
+import com.junlog.crypto.PasswordEncoder;
+import com.junlog.crypto.ScryptPasswordEncoder;
 import com.junlog.domain.User;
 import com.junlog.exception.AlreadyExistEmailException;
-import com.junlog.exception.InvalidRequest;
 import com.junlog.exception.InvalidSigninInformation;
 import com.junlog.request.Login;
 import com.junlog.request.Signup;
@@ -19,13 +19,19 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder encoder;
 
     @Transactional
     public Long signin(Login login) {
-        User user = userRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
-                .orElseThrow(() -> new InvalidSigninInformation());
 
-        Session session = user.addSession();
+        User user = userRepository.findByEmail(login.getEmail())
+                .orElseThrow(InvalidSigninInformation::new);
+
+
+        var matches = encoder.matches(login.getPassword(), user.getPassword());
+        if(!matches) {
+            throw new InvalidSigninInformation();
+        }
 
         return user.getId();
 
@@ -35,16 +41,18 @@ public class AuthService {
     public void signup(Signup signup) {
         Optional<User> userOptional = userRepository
                 .findByEmail(signup.getEmail());
-        if(userOptional.isPresent()) {
+        if (userOptional.isPresent()) {
             throw new AlreadyExistEmailException();
         }
 
 
+        String encryptedPassword = encoder.encrypt(signup.getPassword());
 
         var user = User.builder()
                 .name(signup.getName())
                 .email(signup.getEmail())
-                .password(signup.getPassword()).build();
+                .password(encryptedPassword)
+                .build();
 
         userRepository.save(user);
 
