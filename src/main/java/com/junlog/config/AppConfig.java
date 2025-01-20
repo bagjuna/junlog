@@ -9,7 +9,6 @@ import java.util.Base64;
 @ConfigurationProperties("juna")
 public class AppConfig {
 
-
     private byte[] jwtKey;
 
     public void setJwtKey(String jwtKey) {

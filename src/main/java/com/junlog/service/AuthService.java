@@ -1,7 +1,6 @@
 package com.junlog.service;
 
 import com.junlog.crypto.PasswordEncoder;
-import com.junlog.crypto.ScryptPasswordEncoder;
 import com.junlog.domain.User;
 import com.junlog.exception.AlreadyExistEmailException;
 import com.junlog.exception.InvalidSigninInformation;
@@ -19,7 +18,7 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder encoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Long signin(Login login) {
@@ -28,7 +27,7 @@ public class AuthService {
                 .orElseThrow(InvalidSigninInformation::new);
 
 
-        var matches = encoder.matches(login.getPassword(), user.getPassword());
+        var matches = passwordEncoder.matches(login.getPassword(), user.getPassword());
         if(!matches) {
             throw new InvalidSigninInformation();
         }
@@ -45,8 +44,8 @@ public class AuthService {
             throw new AlreadyExistEmailException();
         }
 
-
-        String encryptedPassword = encoder.encrypt(signup.getPassword());
+        PasswordEncoder encoder = new PasswordEncoder();
+        String encryptedPassword = encoder.encrpyt(signup.getPassword());
 
         var user = User.builder()
                 .name(signup.getName())

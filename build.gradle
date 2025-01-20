@@ -42,6 +42,9 @@ dependencies {
 
     implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
 
+    // Spring security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     // query dsl
     implementation("com.querydsl:querydsl-jpa:${dependencyManagement.importedProperties["querydsl.version"]}:jakarta")
@@ -69,6 +72,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+
 }
 
 // clean 태스크와 cleanGeneatedDir 태스크 중 취향에 따라서 선택하세요.

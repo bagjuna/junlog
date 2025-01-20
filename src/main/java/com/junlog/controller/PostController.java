@@ -46,20 +46,14 @@ package com.junlog.controller;
 
 
 import com.junlog.config.data.UserSession;
-import com.junlog.domain.Post;
-import com.junlog.exception.InvalidRequest;
 import com.junlog.request.PostCreate;
 import com.junlog.request.PostEdit;
 import com.junlog.request.PostSearch;
 import com.junlog.response.PostResponse;
 import com.junlog.service.PostService;
-import jakarta.persistence.PostUpdate;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -71,12 +65,6 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
-
-    @GetMapping("/foo")
-    public Long foo(UserSession userSession) {
-        log.info("name {}", userSession.id);
-        return userSession.id;
-    }
 
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request, UserSession userSession) {

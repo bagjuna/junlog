@@ -1,8 +1,5 @@
 package com.junlog.config.data;
 
-import lombok.Getter;
-
-@Getter
 public class UserSession {
 
     public final Long id;
