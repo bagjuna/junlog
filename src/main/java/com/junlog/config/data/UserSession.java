@@ -7,4 +7,6 @@ public class UserSession {
     public UserSession(Long id) {
         this.id = id;
     }
+
+
 }

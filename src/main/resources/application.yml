@@ -24,6 +24,16 @@ spring:
         max-page-size: 2000
         default-page-size: 20
         one-indexed-parameters: true
+  session:
+    timeout: 864000
 
 juna:
   jwt-key: "m1B9hOwtI8AyZ8QTqkOQVcufEcXNGbFdjGNNFBEjQ6A="
+
+server:
+  servlet:
+    session:
+      cookie:
+        max-age: 172800
+
+

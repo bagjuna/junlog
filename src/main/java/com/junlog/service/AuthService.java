@@ -1,6 +1,5 @@
 package com.junlog.service;
 
-import com.junlog.crypto.PasswordEncoder;
 import com.junlog.domain.User;
 import com.junlog.exception.AlreadyExistEmailException;
 import com.junlog.exception.InvalidSigninInformation;
@@ -8,6 +7,7 @@ import com.junlog.request.Login;
 import com.junlog.request.Signup;
 import com.junlog.respository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,8 +44,7 @@ public class AuthService {
             throw new AlreadyExistEmailException();
         }
 
-        PasswordEncoder encoder = new PasswordEncoder();
-        String encryptedPassword = encoder.encrpyt(signup.getPassword());
+        String encryptedPassword = passwordEncoder.encode(signup.getPassword());
 
         var user = User.builder()
                 .name(signup.getName())
