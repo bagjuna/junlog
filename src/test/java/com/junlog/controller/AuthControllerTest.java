@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.junlog.domain.User;
 import com.junlog.request.Login;
 import com.junlog.request.Signup;
-import com.junlog.respository.UserRepository;
+import com.junlog.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

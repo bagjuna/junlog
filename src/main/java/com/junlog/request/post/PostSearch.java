@@ -1,4 +1,4 @@
-package com.junlog.request;
+package com.junlog.request.post;
 
 
 import lombok.Builder;

@@ -2,10 +2,12 @@ package com.junlog;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.junlog.config.JunlogMockUser;
 import com.junlog.domain.Post;
-import com.junlog.request.PostCreate;
-import com.junlog.respository.PostRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.junlog.repository.UserRepository;
+import com.junlog.request.post.PostCreate;
+import com.junlog.repository.post.PostRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,21 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.restdocs.payload.PayloadDocumentation;
-import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -37,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs(uriScheme = "https",uriHost = "api.junlog.com",uriPort = 443)
+@AutoConfigureRestDocs(uriScheme = "https", uriHost = "api.junlog.com", uriPort = 443)
 @ExtendWith(RestDocumentationExtension.class)
 public class PostControllerDocTest {
 
@@ -45,10 +38,19 @@ public class PostControllerDocTest {
     private MockMvc mockMvc;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private PostRepository postRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @AfterEach
+    void cleanUp() {
+        userRepository.deleteAll();
+        postRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("글 단건 조회")
@@ -81,9 +83,9 @@ public class PostControllerDocTest {
     }
 
 
-
     @Test
     @DisplayName("글 등록")
+    @JunlogMockUser
     void test2() throws Exception {
 
         // given
@@ -95,9 +97,9 @@ public class PostControllerDocTest {
         String json = objectMapper.writeValueAsString(request);
 
         mockMvc.perform(RestDocumentationRequestBuilders.post("/posts")
-                        .contentType(APPLICATION_JSON)
+                                .contentType(APPLICATION_JSON)
 //                        .accept(APPLICATION_JSON)
-                        .content(json)
+                                .content(json)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -110,10 +112,6 @@ public class PostControllerDocTest {
                 ));
 
     }
-
-
-
-
 
 
 }

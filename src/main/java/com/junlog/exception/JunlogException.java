@@ -1,4 +1,4 @@
-package com.junlog.controller;
+package com.junlog.exception;
 
 import lombok.Getter;
 

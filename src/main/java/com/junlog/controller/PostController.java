@@ -45,15 +45,17 @@ package com.junlog.controller;
 //                  -> 한 번에 일관적으로 잘 처리되는 케이스가 없습니다. -> 잘 관리하는 형태가 중요합니다.
 
 
-import com.junlog.config.data.UserSession;
-import com.junlog.request.PostCreate;
-import com.junlog.request.PostEdit;
-import com.junlog.request.PostSearch;
+import com.junlog.config.UserPrincipal;
+import com.junlog.request.post.PostCreate;
+import com.junlog.request.post.PostEdit;
+import com.junlog.request.post.PostSearch;
 import com.junlog.response.PostResponse;
 import com.junlog.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,10 +68,11 @@ public class PostController {
 
     private final PostService postService;
 
+//    @PreAuthorize("hasRole('ROLE_ADMIN') && #request.title = '하하하'")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid PostCreate request, UserSession userSession) {
-
-        postService.write(request);
+    public void post(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody @Valid PostCreate request) {
+        postService.write(userPrincipal.getUserId(), request);
     }
 
     /**
@@ -86,12 +89,15 @@ public class PostController {
         return postService.getList(postSearch);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#postId, 'POST', 'DELETE')")
     @PatchMapping("/posts/{postId}")
     public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request) {
         postService.edit(postId, request);
     }
 
-
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#postId, 'POST', 'DELETE')")
     @DeleteMapping("/posts/{postId}")
     public void delete(@PathVariable Long postId) {
         postService.delete(postId);

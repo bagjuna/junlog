@@ -1,6 +1,5 @@
 package com.junlog.exception;
 
-import com.junlog.controller.JunlogException;
 import lombok.Getter;
 
 @Getter

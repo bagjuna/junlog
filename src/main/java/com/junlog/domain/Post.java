@@ -1,14 +1,13 @@
 package com.junlog.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -22,14 +21,21 @@ public class Post {
 
     private String title;
 
-
     @Lob
     private String content;
 
+    @ManyToOne
+    @JoinColumn
+    private User user;
+
+    @OneToMany(cascade = ALL, mappedBy = "post")
+    private List<Comment> comments;
+
     @Builder
-    public Post(String title, String content) {
+    public Post(String title, String content,User user) {
         this.title = title;
         this.content = content;
+        this.user = user;
     }
 
     public PostEditor.PostEditorBuilder toEditor() {
@@ -49,6 +55,15 @@ public class Post {
 
     }
 
+    public Long getUserId() {
+        return user.getId();
+    }
+
+
+    public void addComment(Comment comment) {
+        comment.setPost(this);
+        this.comments.add(comment);
+    }
 
 
 }

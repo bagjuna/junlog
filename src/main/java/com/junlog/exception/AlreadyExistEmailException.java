@@ -1,7 +1,5 @@
 package com.junlog.exception;
 
-import com.junlog.controller.JunlogException;
-
 public class AlreadyExistEmailException extends JunlogException {
 
     private final static String MESSAGE = "이미 가입된 이메일 입니다.";

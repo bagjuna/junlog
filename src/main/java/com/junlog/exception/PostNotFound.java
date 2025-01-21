@@ -1,7 +1,5 @@
 package com.junlog.exception;
 
-import com.junlog.controller.JunlogException;
-
 /**
  * status -> 404
  */

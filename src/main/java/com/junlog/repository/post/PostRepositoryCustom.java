@@ -1,8 +1,7 @@
-package com.junlog.respository;
+package com.junlog.repository.post;
 
 import com.junlog.domain.Post;
-import com.junlog.request.PostSearch;
-import org.springframework.data.domain.Pageable;
+import com.junlog.request.post.PostSearch;
 
 import java.util.List;
 

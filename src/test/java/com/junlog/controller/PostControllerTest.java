@@ -1,18 +1,18 @@
 package com.junlog.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.junlog.config.JunlogMockUser;
 import com.junlog.domain.Post;
-import com.junlog.request.PostCreate;
-import com.junlog.request.PostEdit;
-import com.junlog.request.PostSearch;
-import com.junlog.respository.PostRepository;
-import org.hamcrest.Matchers;
+import com.junlog.domain.User;
+import com.junlog.repository.UserRepository;
+import com.junlog.request.post.PostCreate;
+import com.junlog.request.post.PostEdit;
+import com.junlog.repository.post.PostRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -37,13 +37,19 @@ class PostControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @BeforeEach
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @AfterEach
     void setUp() {
+        userRepository.deleteAll();
         postRepository.deleteAll();
     }
 
 
     @Test
+    @WithMockUser(username = "juna1234@naver.com", roles = {"ADMIN"})
     @DisplayName("글 작성 요청시 title값은 필수다.")
     void test() throws Exception {
         PostCreate request = PostCreate.builder()
@@ -65,17 +71,19 @@ class PostControllerTest {
 
 
     @Test
-    @DisplayName("/posts 요청시 DB에 값이 저장된다.")
+    @JunlogMockUser
+    @DisplayName("글 작성")
     void test3() throws Exception {
+
 
         PostCreate request = PostCreate.builder()
                 .title("제목입니다.")
-                .content("내용입니다.").build();
-        ObjectMapper objectMapper = new ObjectMapper();
+                .content("내용입니다.")
+                .build();
         String json = objectMapper.writeValueAsString(request);
+
         // expected
         mockMvc.perform(post("/posts")
-                        .header("authorization", "juna")
                         .contentType(APPLICATION_JSON)
                         .content(json)
                 )
@@ -99,6 +107,7 @@ class PostControllerTest {
                 .title("123456789012345")
                 .content("bar")
                 .build();
+
 
         postRepository.save(post);
 
@@ -166,15 +175,21 @@ class PostControllerTest {
 
     @Test
     @DisplayName("글 제목 수정")
+    @JunlogMockUser
     void test7() throws Exception {
         // given
-        Post post = Post.builder()
+
+        User user = userRepository.findAll().get(0);
+
+        Post postcreate = Post.builder()
                 .title("제이팍")
                 .content("반포자이")
+                .user(user)
                 .build();
 
 
-        postRepository.save(post);
+        Post post = postRepository.save(postcreate);
+
         PostEdit postEdit = PostEdit.builder()
                 .title("Jpark")
                 .content("반포자이")
@@ -192,16 +207,20 @@ class PostControllerTest {
     }
 
     @Test
+    @JunlogMockUser
     @DisplayName("게시글 삭제")
     void test8() throws Exception {
         // given
-        Post post = Post.builder()
+
+        User user = userRepository.findAll().get(0);
+
+        Post postCreate = Post.builder()
                 .title("제이팍")
                 .content("반포자이")
+                .user(user)
                 .build();
 
-
-        postRepository.save(post);
+        Post post = postRepository.save(postCreate);
 
         // when
         mockMvc.perform(delete("/posts/{postId}", post.getId())
@@ -215,7 +234,7 @@ class PostControllerTest {
     @Test
     @DisplayName("존재하지 않는 게시글 조회")
     void test9() throws Exception {
-        mockMvc.perform(delete("/posts/{postId}", 1L)
+        mockMvc.perform(get("/posts/{postId}", 1L)
                         .contentType(APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound())
@@ -224,6 +243,7 @@ class PostControllerTest {
 
 
     @Test
+    @JunlogMockUser
     @DisplayName("존재하지 않는 게시글 수정")
     void test10() throws Exception {
 
@@ -240,7 +260,6 @@ class PostControllerTest {
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
-
 
 
 //    @Test

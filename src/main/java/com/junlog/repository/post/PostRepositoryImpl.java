@@ -1,8 +1,7 @@
-package com.junlog.respository;
+package com.junlog.repository.post;
 
 import com.junlog.domain.Post;
-import com.junlog.domain.QPost;
-import com.junlog.request.PostSearch;
+import com.junlog.request.post.PostSearch;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 

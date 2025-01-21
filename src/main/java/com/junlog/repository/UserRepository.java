@@ -1,4 +1,4 @@
-package com.junlog.respository;
+package com.junlog.repository;
 
 import com.junlog.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;

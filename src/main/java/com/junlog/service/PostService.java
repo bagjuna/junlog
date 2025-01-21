@@ -3,17 +3,15 @@ package com.junlog.service;
 import com.junlog.domain.Post;
 import com.junlog.domain.PostEditor;
 import com.junlog.exception.PostNotFound;
-import com.junlog.request.PostCreate;
-import com.junlog.request.PostEdit;
-import com.junlog.request.PostSearch;
+import com.junlog.exception.UserNotFound;
+import com.junlog.request.post.PostCreate;
+import com.junlog.request.post.PostEdit;
+import com.junlog.request.post.PostSearch;
 import com.junlog.response.PostResponse;
-import com.junlog.respository.PostRepository;
-import jakarta.persistence.PostUpdate;
+import com.junlog.repository.post.PostRepository;
+import com.junlog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +23,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService {
 
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public void write(PostCreate postCreate) {
+    public void write(Long userId, PostCreate postCreate) {
+
+        var user = userRepository.findById(userId)
+                .orElseThrow(UserNotFound::new);
 
         Post post = Post.builder()
+                .user(user)
                 .title(postCreate.getTitle())
                 .content(postCreate.getContent())
                 .build();

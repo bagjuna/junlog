@@ -1,6 +1,6 @@
 package com.junlog.controller;
 
-import com.junlog.exception.InvalidRequest;
+import com.junlog.exception.JunlogException;
 import com.junlog.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -1,13 +1,14 @@
 package com.junlog.service;
 
 import com.junlog.domain.Post;
+import com.junlog.domain.User;
 import com.junlog.exception.PostNotFound;
-import com.junlog.request.PostCreate;
-import com.junlog.request.PostEdit;
-import com.junlog.request.PostSearch;
+import com.junlog.repository.UserRepository;
+import com.junlog.request.post.PostCreate;
+import com.junlog.request.post.PostEdit;
+import com.junlog.request.post.PostSearch;
 import com.junlog.response.PostResponse;
-import com.junlog.respository.PostRepository;
-import org.junit.jupiter.api.Assertions;
+import com.junlog.repository.post.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +30,10 @@ class PostServiceTest {
     @Autowired
     private PostRepository postRepository;
 
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Autowired
     private PostService postService;
 
@@ -43,12 +47,19 @@ class PostServiceTest {
     @DisplayName("글 작성")
     void test() {
 
+
+        User user = User.builder()
+                .name("준아")
+                .email("juna1234@naver.com")
+                .password("1234")
+                .build();
+
         PostCreate request = PostCreate.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
 
-        postService.write(request);
+        postService.write(user.getId(), request);
 
         assertEquals(1L, postRepository.count());
 

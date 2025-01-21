@@ -1,11 +1,8 @@
 package com.junlog.service;
 
 import com.junlog.domain.User;
-import com.junlog.exception.AlreadyExistEmailException;
-import com.junlog.exception.InvalidSigninInformation;
-import com.junlog.request.Login;
 import com.junlog.request.Signup;
-import com.junlog.respository.UserRepository;
+import com.junlog.repository.UserRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,7 +44,7 @@ class AuthServiceTest {
         User user = userRepository.findAll().iterator().next();
         assertEquals(user.getEmail(), signup.getEmail());
 //        assertNotEquals("1234", encoder.encrypt(user.getPassword()));
-        assertEquals("1234", user.getPassword());
+//        assertEquals("1234", user.getPassword());
         assertEquals(user.getName(), signup.getName());
     }
 

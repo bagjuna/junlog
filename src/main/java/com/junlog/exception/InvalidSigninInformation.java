@@ -1,7 +1,5 @@
 package com.junlog.exception;
 
-import com.junlog.controller.JunlogException;
-
 public class InvalidSigninInformation extends JunlogException {
 
     private static final String MESSAGE = "아이디/비밀번호가 올바르지 않습니다.";

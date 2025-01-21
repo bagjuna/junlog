@@ -1,6 +1,5 @@
-package com.junlog.request;
+package com.junlog.request.post;
 
-import com.junlog.exception.InvalidRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
