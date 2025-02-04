@@ -8,7 +8,7 @@ spring:
 
   jpa:
     defer-datasource-initialization: true
-  #    driver-class-name: org.postgresql.Driver
+#    driver-class-name: org.postgresql.Driver
 #  sql:
 #    init:
 #      mode: always
@@ -27,13 +27,17 @@ spring:
   session:
     timeout: 864000
 
+
 juna:
   jwt-key: "m1B9hOwtI8AyZ8QTqkOQVcufEcXNGbFdjGNNFBEjQ6A="
+
 
 server:
   servlet:
     session:
       cookie:
         max-age: 172800
+
+
 
 

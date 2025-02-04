@@ -3,6 +3,8 @@
   "include": ["./e2e/**/*", "./support/**/*"],
   "exclude": ["./support/component.*"],
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "isolatedModules": false,
     "types": ["cypress"]
   }

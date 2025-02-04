@@ -1,52 +1,40 @@
 <script setup lang="ts">
-import axios from "axios";
-import {ref} from "vue";
-import router from "@/router";
+import {onMounted, reactive} from "vue";
+import {container} from "tsyringe";
+import PostRepository from "@/repository/PostRepository.ts";
+import PostComponent from "@/components/PostComponent.vue";
 
-const posts = ref([]);
+const POST_REPOSITORY = container.resolve(PostRepository);
 
-axios.get("/api/posts?page=1&size=5").then((response) => {
-  response.data.forEach((r: any) => {
-    posts.value.push(r);
 
-  });
+const state = reactive({
+  postList: [],
+
 })
 
-
-const moveToRead = () => {
-  router.push({name: "read"})
+function getList() {
+  POST_REPOSITORY.getList().then(postList => {
+    console.log('>>>',postList)
+    state.postList = postList;
+  })
 }
+
+onMounted(() => {
+  getList()
+})
 
 </script>
 
 <template>
-  <ul>
-
-    <li v-for="post in posts"
-        :key="post.id" @click="moveToRead()">
-
-      <div class="title" >
-      <router-link :to="{name: 'read' ,params:{postId: post.id}}"> {{ post.title }}
-        </router-link>
-      </div>
-      <div class="content">
-        {{ post.content }}
-
-      </div>
-
-      <div class="sub d-flex">
-        개발
-      </div>
-
-      <div class="sub">
-        코딩
-      </div>
-    </li>
-  </ul>
-
+  <div class="content">
+    <ul class="posts">
+      <li v-for="post in state.postList" :key="post.id">
+        <PostComponent :post="post" />
+      </li>
+    </ul>
+  </div>
 </template>
 <style scoped lang="scss">
-
 ul {
   list-style: none;
   padding: 0;
@@ -85,10 +73,7 @@ ul {
         margin-left: 10px;
         color: #6b6b6b;
       }
-
     }
-
   }
 }
-
 </style>

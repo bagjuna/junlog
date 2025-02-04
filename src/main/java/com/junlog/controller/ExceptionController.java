@@ -52,5 +52,20 @@ public class ExceptionController {
         return response;
     }
 
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> exceptionHandler(Exception e) {
+        log.error("예상치 못한 에러 발생", e);
 
+
+        ErrorResponse body = ErrorResponse.builder()
+                .code("500")
+                .message("예상치 못한 에러가 발생했습니다.")
+                .build();
+
+        ResponseEntity<ErrorResponse> response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(body);
+
+        return response;
+    }
 }

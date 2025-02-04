@@ -9,6 +9,7 @@ import com.junlog.repository.UserRepository;
 import com.junlog.repository.comment.CommentRepository;
 import com.junlog.repository.post.PostRepository;
 import com.junlog.request.comment.CommentCreate;
+import com.junlog.request.comment.CommentDelete;
 import com.junlog.request.post.PostCreate;
 import com.junlog.request.post.PostEdit;
 import org.junit.jupiter.api.AfterEach;
@@ -119,26 +120,28 @@ class CommentControllerTest {
                 .user(user)
                 .build();
         Post post = postRepository.save(postcreate);
+        String encryptedPassword = passwordEncoder.encode("123456");
 
         Comment comment = Comment.builder()
                 .author("홍길동")
-                .password("123456")
+                .password(encryptedPassword)
                 .content("으 하하하하하하하하하하하하하하하")
                 .build();
         comment.setPost(post);
 
+
         commentRepository.save(comment);
 
-        String json = objectMapper.writeValueAsString(comment.getPassword());
+        CommentDelete request = new CommentDelete("123456");
+        String json = objectMapper.writeValueAsString(request);
 
         //expected
         mockMvc.perform(post("/comments/{commentId}/delete", comment.getId())
                         .contentType(APPLICATION_JSON)
                         .content(json)
-
                 )
                 .andDo(print())
                 .andExpect(status().isOk());
-
+        assertEquals(0, commentRepository.count());
     }
 }

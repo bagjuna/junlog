@@ -6,17 +6,10 @@
       </el-col>
     </el-row>
   </el-main>
-
-
 </template>
-
 
 <style scoped>
 content {
   height: calc(100vh - 60px);
-
-
-
 }
-
 </style>

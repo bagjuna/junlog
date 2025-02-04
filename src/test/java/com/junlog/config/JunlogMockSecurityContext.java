@@ -30,7 +30,8 @@ public class JunlogMockSecurityContext implements WithSecurityContextFactory<Jun
         var principal = new UserPrincipal(user);
 
         var role = new SimpleGrantedAuthority("ROLE_ADMIN");
-        var authenticationToken = new UsernamePasswordAuthenticationToken(principal,
+        var authenticationToken = new UsernamePasswordAuthenticationToken(
+                principal,
                 user.getPassword(),
                 List.of(role));
 

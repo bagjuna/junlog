@@ -1,0 +1,52 @@
+<script setup lang="ts">
+
+import {reactive} from "vue";
+import Login from "@/entity/user/Login.ts";
+import axios, {type AxiosError, type AxiosResponse} from "axios";
+import {ElMessage} from "element-plus";
+import {useRouter} from "vue-router";
+import AxiosHttpClient from "@/http/AxiosHttpClient.ts";
+import type HttpError from "@/http/HttpError.ts";
+import UserRepository from "@/repository/UserRepository.ts";
+import {container} from "tsyringe";
+
+const state = reactive({
+  login: new Login()
+})
+
+const router = useRouter()
+
+const USER_REPOSITORY = container.resolve(UserRepository)
+
+function doLogin() {
+
+  const httpClient = new AxiosHttpClient();
+
+  USER_REPOSITORY.login(state.login)
+    .then(() => {
+      ElMessage({type: "success", message: "로그인 성공"})
+      router.replace({name: "home"})
+    })
+    .catch((e:HttpError) => {
+      ElMessage({type: "error", message: e.getMessage()})
+    });
+}
+</script>
+
+<template>
+  <el-col :span="10" :offset="7">
+    <el-form label-position="top">
+      <el-form-item label="이메일">
+        <el-input v-model="state.login.email"></el-input>
+      </el-form-item>
+      <el-form-item label="비밀번호">
+        <el-input type="password" v-model="state.login.password"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" style="width: 100%" @click="doLogin()">로그인</el-button>
+      </el-form-item>
+    </el-form>
+  </el-col>
+</template>
+
+<style lang="scss" scoped></style>

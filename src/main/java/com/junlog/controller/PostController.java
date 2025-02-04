@@ -87,6 +87,8 @@ public class PostController {
     @GetMapping("/posts")
     public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
         return postService.getList(postSearch);
+
+
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

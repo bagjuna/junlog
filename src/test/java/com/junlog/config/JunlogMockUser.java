@@ -10,7 +10,6 @@ import java.lang.annotation.RetentionPolicy;
 
 public @interface JunlogMockUser {
 
-
     String name() default "juna";
 
     String email() default "juna1234@naver.com";

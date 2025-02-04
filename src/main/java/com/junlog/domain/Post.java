@@ -1,10 +1,12 @@
 package com.junlog.domain;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.ALL;
@@ -15,6 +17,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 public class Post {
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
@@ -24,6 +27,7 @@ public class Post {
     @Lob
     private String content;
 
+    private LocalDateTime regDate;
     @ManyToOne
     @JoinColumn
     private User user;
@@ -32,10 +36,11 @@ public class Post {
     private List<Comment> comments;
 
     @Builder
-    public Post(String title, String content,User user) {
+    public Post(String title, String content, User user) {
         this.title = title;
         this.content = content;
         this.user = user;
+        this.regDate = LocalDateTime.now();
     }
 
     public PostEditor.PostEditorBuilder toEditor() {
@@ -44,8 +49,6 @@ public class Post {
                 .content(content);
 
     }
-
-
 
 
     public void edit(PostEditor postEditor) {

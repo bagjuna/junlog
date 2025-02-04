@@ -9,7 +9,10 @@ Content-Type: application/json
 }
 
 
-### 게시갈 삭제
+### 게시글 삭제
 
 DELETE http://localhost:8080/posts/2
 Content-Type: application/json
+
+### 게시글 리스트 조회
+
