@@ -7,11 +7,13 @@ import com.junlog.exception.UserNotFound;
 import com.junlog.request.post.PostCreate;
 import com.junlog.request.post.PostEdit;
 import com.junlog.request.post.PostSearch;
+import com.junlog.response.PagingResponse;
 import com.junlog.response.PostResponse;
 import com.junlog.repository.post.PostRepository;
 import com.junlog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,11 +56,11 @@ public class PostService {
     }
 
 
-    public List<PostResponse> getList(PostSearch postSearch) {
-        return postRepository.getList(postSearch)
-                .stream()
-                .map(PostResponse::new)
-                .collect(Collectors.toList());
+    public PagingResponse<PostResponse> getList(PostSearch postSearch) {
+        Page<Post> postPage = postRepository.getList(postSearch);
+        PagingResponse<PostResponse> postList = new PagingResponse<>(postPage, PostResponse.class);
+        return postList;
+
 
     }
 

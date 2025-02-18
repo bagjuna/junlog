@@ -46,14 +46,17 @@ package com.junlog.controller;
 
 
 import com.junlog.config.UserPrincipal;
+import com.junlog.domain.Post;
 import com.junlog.request.post.PostCreate;
 import com.junlog.request.post.PostEdit;
 import com.junlog.request.post.PostSearch;
+import com.junlog.response.PagingResponse;
 import com.junlog.response.PostResponse;
 import com.junlog.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -85,9 +88,8 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
+    public PagingResponse<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
         return postService.getList(postSearch);
-
 
     }
 

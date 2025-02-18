@@ -7,6 +7,7 @@ import com.junlog.repository.UserRepository;
 import com.junlog.request.post.PostCreate;
 import com.junlog.request.post.PostEdit;
 import com.junlog.request.post.PostSearch;
+import com.junlog.response.PagingResponse;
 import com.junlog.response.PostResponse;
 import com.junlog.repository.post.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -108,7 +109,8 @@ class PostServiceTest {
                 .build();
 
         // when
-        List<PostResponse> posts = postService.getList(postSearch);
+        PagingResponse<PostResponse> list = postService.getList(postSearch);
+        List<PostResponse> posts = (List<PostResponse>) list;
 
         assertEquals(10, posts.size());
         assertEquals("foo 20", posts.get(0).getTitle());
@@ -135,7 +137,8 @@ class PostServiceTest {
                 .page(1)
                 .build();
         // when
-        List<PostResponse> posts = postService.getList(postSearch);
+        PagingResponse<PostResponse> list = postService.getList(postSearch);
+        List<PostResponse> posts = (List<PostResponse>) list;
 
         assertEquals(10L, posts.size());
         assertEquals("제이팍 제목 30", posts.get(0).getTitle());

@@ -28,8 +28,8 @@ public class User {
 
     private LocalDateTime createdAt;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Post> posts = new ArrayList<>();
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    private List<Post> posts = new ArrayList<>();
 
     @Builder
     public User(String name, String email, String password) {

@@ -16,7 +16,7 @@ export default class Post {
   }
 
   public getDisplaySimpleRegDate() {
-    return this.regDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    return this.regDate.format(DateTimeFormatter.ofPattern('yyyy-MM-dd'))
   }
 
   // dayjs, monent.js, date
